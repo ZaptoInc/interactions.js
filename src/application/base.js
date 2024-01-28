@@ -127,7 +127,7 @@ class Application extends EventEmitter {
      * if you want to use another api endpoint
      * @type {string}
      */
-    this.apiEndpoint = options?.apiInstance ?? "";
+    this.apiEndpoint = options?.apiEndpoint ?? "/interactions";
 
     /**
      * Private property to store the client cache
