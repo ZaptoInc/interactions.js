@@ -143,10 +143,10 @@ class Application extends EventEmitter {
     this.readySince = null;
 
     // Adding some ENV Data
-    process.env.DISCORD_TOKEN = this.botToken;
-    process.env.MONGOOSE_STRING = this.mongooseString;
-    process.env.PUBLIC_KEY = this.publicKey;
-    process.env.APPLICATION_ID = this.applicationId;
+    process.env.INTERACTIONS_DISCORD_TOKEN = this.botToken;
+    process.env.INTERACTIONS_MONGOOSE_STRING = this.mongooseString;
+    process.env.INTERACTIONS_PUBLIC_KEY = this.publicKey;
+    process.env.INTERACTIONS_APPLICATION_ID = this.applicationId;
 
     // Fetch the client data
     if (options?.fetchClient) this.fetchClient();

@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
 const Rest = require("../../structures/Rest.js");
-const {Routes} = require('discord-api-types/v10');
+const { Routes } = require("discord-api-types/v10");
 
 /**
  * User Manager to work with Users
@@ -23,86 +23,75 @@ const {Routes} = require('discord-api-types/v10');
  *
  */
 class UserManager {
-    constructor(client, id) {
-        /**
-         * the id of the user
-         * @type {string|null}
-         */
-        this.id = id ?? null
-    }
-
+  constructor(client, id) {
     /**
-     * Send a message to the user
-     * @param {string | null} userId the user id
-     * @param {object} data the message payload
-     * @return {Promise<object>}
+     * the id of the user
+     * @type {string|null}
      */
-    async sendDM(userId = this.id, data) {
-        const rest = Rest.getRest();
+    this.id = id ?? null;
+  }
 
-        const channel = await rest.post(
-            Routes.userChannels(),
-            {
-                body: {
-                    recipient_id: userId ?? this.id
-                },
-            }
-        );
+  /**
+   * Send a message to the user
+   * @param {string | null} userId the user id
+   * @param {object} data the message payload
+   * @return {Promise<object>}
+   */
+  async sendDM(userId = this.id, data) {
+    const rest = Rest.getRest();
 
-        if (!channel.id) {
-            throw new Error("[Interactions.js => <User>.send] Wasn't able to create a DM channel with the user");
-        }
+    const channel = await rest.post(Routes.userChannels(), {
+      body: {
+        recipient_id: userId ?? this.id,
+      },
+    });
 
-        return rest.post(
-            Routes.channelMessages(channel.id),
-            {
-                body: data,
-                files: data?.files ?? undefined,
-            }
-        );
+    if (!channel.id) {
+      throw new Error(
+        "[Interactions.js => <User>.send] Wasn't able to create a DM channel with the user"
+      );
     }
 
-    /**
-     * Fetch the user from Discord
-     * @param {string | null} userId
-     * @return {Promise<object>}
-     */
-    async fetch(userId = this.id) {
-        const rest = Rest.getRest();
+    return rest.post(Routes.channelMessages(channel.id), {
+      body: data,
+      files: data?.files ?? undefined,
+    });
+  }
 
-        return rest.get(
-            Routes.user(userId ?? this.id)
-        );
-    }
+  /**
+   * Fetch the user from Discord
+   * @param {string | null} userId
+   * @return {Promise<object>}
+   */
+  async fetch(userId = this.id) {
+    const rest = Rest.getRest();
 
-    /**
-     * Fetch the current bot from Discord
-     * @return {Promise<object>}
-     */
-    async fetchMyself() {
-        const rest = Rest.getRest();
+    return rest.get(Routes.user(userId ?? this.id));
+  }
 
-        return rest.get(
-            Routes.user(process.env.APPLICATION_ID)
-        );
-    }
+  /**
+   * Fetch the current bot from Discord
+   * @return {Promise<object>}
+   */
+  async fetchMyself() {
+    const rest = Rest.getRest();
 
-    /**
-     * Fetch the current bot's application (Pretty useful for guild count!)
-     * @return {Promise<object>}
-     */
-    async fetchMyApplication() {
-        const rest = Rest.getRest();
+    return rest.get(Routes.user(process.env.INTERACTIONS_APPLICATION_ID));
+  }
 
-        return rest.get(
-            '/applications/@me',
-            {
-                headers: {
-                    Authorization: 'Bot ' + process.env.DISCORD_TOKEN,
-                }
-            }
-        );
-    }
+  /**
+   * Fetch the current bot's application (Pretty useful for guild count!)
+   * @return {Promise<object>}
+   */
+  async fetchMyApplication() {
+    const rest = Rest.getRest();
+
+    return rest.get("/applications/@me", {
+      headers: {
+        Authorization: "Bot " + process.env.INTERACTIONS_DISCORD_TOKEN,
+      },
+    });
+  }
 }
 
 module.exports = UserManager;
